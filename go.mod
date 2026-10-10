@@ -6,6 +6,7 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/livekit/protocol v1.51.1-0.20260910121219-271d9cde3897
 	github.com/livekit/server-sdk-go/v2 v2.19.0
+	github.com/mattn/go-isatty v0.0.20
 	github.com/pion/rtp v1.10.5
 	github.com/pion/webrtc/v4 v4.2.19
 	github.com/rs/zerolog v1.35.1
@@ -42,7 +43,6 @@ require (
 	github.com/livekit/psrpc v0.7.6 // indirect
 	github.com/magefile/mage v1.17.2 // indirect
 	github.com/mattn/go-colorable v0.1.14 // indirect
-	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-sqlite3 v1.14.52 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
 	github.com/nats-io/nats.go v1.52.0 // indirect

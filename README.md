@@ -44,7 +44,23 @@ ffmpeg -i a.ogg -i b.ogg -filter_complex amix=inputs=2:normalize=0 call.ogg
 Use `first_frame_at` from `meta.json` to offset tracks that started at different times (`-itsoffset`
 or `adelay`).
 
-## Running
+## Running with Docker
+
+Images for amd64 and arm64 are published to GHCR on every push to `main` (`latest`, `sha-…`) and
+for version tags (`v1.2.3` → `1.2.3`, `1.2`).
+
+```sh
+mkdir -p data && cp config.example.yaml data/config.yaml   # fill it in
+sudo chown -R 1000:1000 data                               # the container runs as uid 1000
+docker compose up -d                                       # see docker-compose.yaml
+docker compose logs -f
+```
+
+Everything lives in `/data`: `config.yaml`, the encryption database and `recordings/` (paths in the
+config are relative to it). Back up `data/`: losing the database means a new bot device. On
+`docker compose down` the bot leaves the calls it's recording and finishes their files first.
+
+## Running from source
 
 Needs Go ≥ 1.26.8 (`GOTOOLCHAIN=go1.26.8` fetches it). Olm is mautrix's pure-Go implementation
 (`-tags goolm`), so no libolm is needed.

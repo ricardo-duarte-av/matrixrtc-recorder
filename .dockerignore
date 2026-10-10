@@ -1,0 +1,9 @@
+# Never send credentials, encryption state or recordings into the build context.
+config.yaml
+*.db
+*.db-*
+recordings/
+data/
+/matrixrtc-recorder
+.git
+.github

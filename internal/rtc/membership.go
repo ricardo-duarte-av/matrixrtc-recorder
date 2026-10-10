@@ -9,6 +9,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"reflect"
 	"regexp"
 	"time"
 
@@ -365,5 +366,24 @@ func StickyLeaveContent(memberID string) map[string]any {
 	return map[string]any{
 		"slot_id":            RoomSlotID,
 		"msc4354_sticky_key": memberID,
+	}
+}
+
+// rawContent lets mautrix "parse" MatrixRTC event types it doesn't know. We read their raw JSON
+// ourselves; registering them only stops a warning per encrypted membership event.
+type rawContent map[string]any
+
+func init() {
+	for _, t := range []event.Type{
+		{Type: LegacyMemberType, Class: event.StateEventType},
+		{Type: StickyMemberType, Class: event.MessageEventType},
+		{Type: "org.matrix.msc4075.rtc.notification", Class: event.MessageEventType},
+		{Type: "org.matrix.msc4310.rtc.decline", Class: event.MessageEventType},
+		{Type: "io.element.call.reaction", Class: event.MessageEventType},
+		{Type: EncryptionKeysType, Class: event.ToDeviceEventType},
+	} {
+		if _, known := event.TypeMap[t]; !known {
+			event.TypeMap[t] = reflect.TypeOf(rawContent{})
+		}
 	}
 }

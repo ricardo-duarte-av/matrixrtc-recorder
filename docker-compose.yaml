@@ -1,0 +1,22 @@
+# Sample deployment. Put config.yaml in ./data first:
+#
+#   mkdir -p data && cp config.example.yaml data/config.yaml   # then edit it
+#   sudo chown -R 1000:1000 data                               # the container runs as uid 1000
+#   docker compose up -d && docker compose logs -f
+#
+# Paths in config.yaml are relative to /data, so the defaults (recorder.db, recordings) end up in
+# ./data next to the config.
+services:
+  recorder:
+    image: ghcr.io/ricardo-duarte-av/matrixrtc-recorder:latest
+    container_name: matrixrtc-recorder
+    restart: unless-stopped
+    volumes:
+      - ./data:/data
+    # On SIGTERM the bot leaves the calls it's recording and finishes their files: give it time.
+    stop_grace_period: 30s
+    environment:
+      TZ: Europe/Lisbon
+    # Media flows over WebRTC (outbound UDP, falling back to TCP/TURN), which works fine through
+    # Docker's default NAT. Use host networking only if your LiveKit setup needs it:
+    # network_mode: host

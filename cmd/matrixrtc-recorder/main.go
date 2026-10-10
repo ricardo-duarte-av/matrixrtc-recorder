@@ -10,17 +10,24 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/mattn/go-isatty"
 	"github.com/rs/zerolog"
 
 	"github.com/ricardo-duarte-av/matrixrtc-recorder/internal/bot"
 	"github.com/ricardo-duarte-av/matrixrtc-recorder/internal/config"
 )
 
+// version is set at build time (-ldflags "-X main.version=...").
+var version = "dev"
+
 func main() {
 	configPath := flag.String("config", "config.yaml", "path to the configuration file")
 	flag.Parse()
 
-	log := zerolog.New(zerolog.ConsoleWriter{Out: os.Stderr, TimeFormat: time.DateTime}).With().Timestamp().Logger()
+	// Colours only on a terminal: under Docker they'd show up as escape codes in `docker logs`.
+	noColor := !isatty.IsTerminal(os.Stderr.Fd()) || os.Getenv("NO_COLOR") != ""
+	log := zerolog.New(zerolog.ConsoleWriter{Out: os.Stderr, TimeFormat: time.DateTime, NoColor: noColor}).
+		With().Timestamp().Logger()
 	cfg, err := config.Load(*configPath)
 	if err != nil {
 		log.Fatal().Err(err).Msg("Failed to load configuration")
@@ -30,6 +37,7 @@ func main() {
 		log.Fatal().Err(err).Msg("Bad log_level")
 	}
 	log = log.Level(level)
+	log.Info().Str("version", version).Msg("Starting matrixrtc-recorder")
 
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
