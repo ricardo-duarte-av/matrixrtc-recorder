@@ -31,3 +31,10 @@ go.work.sum
 # Editor/IDE
 # .idea/
 # .vscode/
+
+# matrixrtc-recorder: local config (credentials), encryption state, recordings, binary
+/matrixrtc-recorder
+config.yaml
+*.db
+*.db-*
+recordings/

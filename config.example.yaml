@@ -1,0 +1,21 @@
+# Matrix account of the bot. It logs in with the password at every start, reusing the device
+# (and its encryption keys) stored in the database.
+homeserver: https://matrix.example.org
+user_id: "@recorder:example.org"
+password: "change me"
+device_name: MatrixRTC recorder
+
+# SQLite database for encryption state. Losing it means a new device and unreadable old messages.
+database: recorder.db
+# Encrypts the Olm account in the database. Generate once (e.g. `openssl rand -hex 32`), never change.
+pickle_key: ""
+
+recordings_dir: recordings
+command_prefix: "!record"
+# Power level needed to start or stop recordings (50 = moderator, 100 = admin).
+min_power_level: 50
+
+# Only used when the homeserver advertises no MatrixRTC transport (MSC4143 /rtc/transports).
+livekit_service_url: ""
+
+log_level: info
